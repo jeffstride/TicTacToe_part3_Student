@@ -1,6 +1,6 @@
 import java.util.*;
 
-public class GameTreeAI extends Player {
+public class GameTreeAI extends AIBase {
 	
 	private GameTreeAI(GameUserInterface gui, int num) {
 		super(gui, num);

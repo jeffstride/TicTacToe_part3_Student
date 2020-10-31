@@ -83,7 +83,7 @@ public class Board {
 	}
 	
 	/**
-	 * This gets all the moves. 
+	 * This gets all the moves that are available to make.
 	 * We make copies of the moves to avoid clobbering the values.
 	 * We adjust the moves before giving out the
 	 * list so that they have all the correct X's and Oh values.
@@ -104,6 +104,31 @@ public class Board {
 			result[index++] = new Move(move.getRow(), move.getCol(), value);
 		}
 		return result;
+	}
+
+	/**
+	 * Gets all the moves that have already been made.
+	 * @return
+	 *    Array of Move objects representing all moves already made.
+	 */
+	public Move[] getAllMovesMade() {
+		// handle the empty case
+		int movesMadeCount = 9 - this.moves.size();
+		if (movesMadeCount == 0) {
+			return new Move[0];
+		}
+		
+		Move[] result = new Move[9-this.moves.size()];
+		for (int row = 0; row < 3; row++) {
+			for (int col = 0; col < 3; col++) {
+				if (board[row][col] != 0) {
+					movesMadeCount--;
+					result[movesMadeCount] = new Move(row, col, board[row][col]);
+				}
+			}
+		}
+	
+		return result;		
 	}
 	
 	/**

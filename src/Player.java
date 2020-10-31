@@ -24,10 +24,6 @@ public class Player {
 	public void tellPlayerResult(int winner) {
 	}
 	
-	// TODO: probably should have an AIBase where this would go
-	public void learn() {
-	}
-	
 	public Move getMove(Board board) {
 		int answer = 1;
 		if (gui != null) {

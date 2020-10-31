@@ -6,7 +6,7 @@ import java.util.*;
  */
 
 // This is the Artificial Intelligence that LEARNS!!
-public class CupsAI extends Player {
+public class CupsAI extends AIBase {
 
 	private boolean learning = false;
 	
@@ -77,6 +77,8 @@ public class CupsAI extends Player {
 	 */
 	public Move getMove(Board board) {
 		// TODO: Student needs to implement this to be smart.
+		// The current implementation here is not smart
+		// as it simply picks a random move.
 		
 		// pick a random move from all that are available.
 		Move[] moves = board.getAllMoves();

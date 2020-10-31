@@ -12,9 +12,6 @@ public class TicTacToe {
 		System.out.print("GUI or console? (G/C): ");
 		boolean useGUI = console.nextLine().toLowerCase().startsWith("g");
 		
-		System.out.print("GameTree or Cups? (G/C): ");
-		useGameTree = console.nextLine().toLowerCase().startsWith("g");
-		
 		// let's use our GameManager object as the semaphore
 		SwingUI gui = new SwingUI(game);
 		
@@ -23,11 +20,18 @@ public class TicTacToe {
 			
 			// start up the UI on the EVT
 			SwingUI.startUIOnEventDispatchThread(gui);
+			
+			// TODO: Delete this once game play works
+			gui.waitForNotifications();
 		} else {
+			
 			game.setGameInterface(new ConsoleUI(game));
 		}
 		
-		game.play();
+		// TODO: Once the Student is ready to start playing
+		// the game, call: game.play();
+		// game.play();
+
 
 		console.close();
 	}
@@ -36,22 +40,51 @@ public class TicTacToe {
 		this.gui = gui;
 	}
 	
+	/**
+	 * This plays games until the user(s) don't want to play anymore.
+	 * It starts off by asking how many players. If there is only
+	 * one play, it then asks for the type of AI Algorithm to use.
+	 * Furthermore, with an AI, it creates the AI class and allows
+	 * the AI to learn (synchronously) before starting the play.
+	 * 
+	 * When playing an AI, the AI always goes first for now (is X).
+	 * The human player will always be O. This is for simplification
+	 * of the code.
+	 * 
+	 * The management of the game is one the main thread. All GUI
+	 * is handled on the Event Dispatch Thread. Dialogs use a semaphore
+	 * to synchronize user input back to the main thread which waits
+	 * for user input.
+	 */
 	public void play() {
 		
 		// get player count
 		int playerCount = gui.getPlayerCount();
 		
+		// ask for the type of AI, if we have a 1-player game
+		if (playerCount == 1) {
+			useGameTree = (gui.getAIAlgorithm() == 0);
+		}
+		
 		// start with two human Players
 		Player players[] = { new Player(gui, 1), new Player(gui, 2) } ;
 		
-		// TODO Here are some possible things one could do:
-		// * ask for count of games to train
-		// * show a progress bar in the UI
-		// * Do UI to get who goes first
-		// * Check to see which AI to create
+		// EXTENSIONS: Here are some possible things one could do:
+		// 1) ask for count of games to train
+		// 2) show a progress bar in the UI
+		// 3) Do UI to get who goes first (AI or Human)
+		// 4) Get Human Player Names in GUI and Console
 		if (playerCount == 1) {
+			// Create the correct AI by using a static factory method.
+			// This factory pattern isn't truly necessary.
 			Player ai = (useGameTree ? GameTreeAI.getPlayer(gui, 1) : CupsAI.getPlayer(gui, 1));
-			ai.learn();
+			
+			// Cast our Player type to an AIBase so that we can have
+			// access to the learn() method
+			AIBase learningAI = (AIBase) ai;
+			learningAI.learn();
+			
+			// put the AI player into our array
 			players[0] = ai;
 		}
 		

@@ -65,4 +65,18 @@ public class ConsoleUI implements GameUserInterface {
 		return console.nextLine().toLowerCase().startsWith("y");
 	}
 
+	/**
+	 * Asks the user for the type of AI to use.
+	 * @return
+	 *    0 = GameTree
+	 *    1 = Cups
+	 *    2 = ...
+	 *    3 = ...
+	 */
+	@Override
+	public int getAIAlgorithm() {
+		System.out.print("GameTree or Cups? (G/C): ");
+		return console.nextLine().toLowerCase().startsWith("g") ? 0 : 1;
+	}
+
 }
