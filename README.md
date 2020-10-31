@@ -13,7 +13,7 @@ the game be working before starting on any AI.
 
 ## Design Overview
 ### UML Diagram of base classes
-![image]
+![Image](UML%20TicTacToe.png)
 ### Synchronization of Threads
 
 ## Dialogs to Create
