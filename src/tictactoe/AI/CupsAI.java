@@ -1,4 +1,11 @@
+package tictactoe.AI;
 import java.util.*;
+
+import tictactoe.fundamentals.Board;
+import tictactoe.fundamentals.GameUserInterface;
+import tictactoe.fundamentals.Move;
+import tictactoe.fundamentals.Player;
+import tictactoe.fundamentals.TicTacToe;
 
 /*
  *  TODO: Student is to implement this class by adding

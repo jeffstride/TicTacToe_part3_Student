@@ -1,10 +1,38 @@
-import java.util.*;
+package tictactoe.fundamentals;
 
+import java.util.*;
+import tictactoe.AI.AIBase;
+import tictactoe.AI.CupsAI;
+import tictactoe.AI.GameTreeAI;
+import tictactoe.console.ConsoleUI;
+import tictactoe.gui.SwingUI;
+
+/**
+ * This class is responsible for creating the necessary class to run
+ * the TicTacToe game. It will first ask if we are to be GUI or console
+ * based and then it will create the appropriate user interface class:
+ * ConsoleUI or SwingUI.<p>
+ * 
+ * This class will also go through all the steps to play the game.
+ * It will create an AI Player, if needed, and allow the AI to learn.
+ * It will ask the Player objects for their moves, make the move to
+ * the board, and end the game when the board says the game is over.
+ * 
+ * @author jstride
+ *
+ */
 public class TicTacToe {
 	
 	private GameUserInterface gui;
 	public static boolean useGameTree = true;
 	
+	/**
+	 * Main will ask via the console if we are GUI or console.
+	 * It will then create an instance of the correct user interface
+	 * class, an instance of this TicTacToe class, and connect
+	 * the two together. 
+	 * @param args
+	 */
 	public static void main(String[] args) {
 		TicTacToe game = new TicTacToe();
 		Scanner console = new Scanner(System.in);
@@ -12,10 +40,9 @@ public class TicTacToe {
 		System.out.print("GUI or console? (G/C): ");
 		boolean useGUI = console.nextLine().toLowerCase().startsWith("g");
 		
-		// let's use our GameManager object as the semaphore
-		SwingUI gui = new SwingUI(game);
-		
 		if (useGUI) {
+			// let's use our GameManager object as the semaphore
+			SwingUI gui = new SwingUI(game);
 			game.setGameInterface(gui);
 			
 			// start up the UI on the EVT
@@ -25,25 +52,24 @@ public class TicTacToe {
 			gui.waitForNotifications();
 		} else {
 			
-			game.setGameInterface(new ConsoleUI(game));
+			game.setGameInterface(new ConsoleUI());
 		}
 		
 		// TODO: Once the Student is ready to start playing
 		// the game, call: game.play();
 		// game.play();
 
-
 		console.close();
 	}
 	
-	public void setGameInterface(GameUserInterface gui) {
+	private void setGameInterface(GameUserInterface gui) {
 		this.gui = gui;
 	}
 	
 	/**
 	 * This plays games until the user(s) don't want to play anymore.
 	 * It starts off by asking how many players. If there is only
-	 * one play, it then asks for the type of AI Algorithm to use.
+	 * one player, it then asks for the type of AI Algorithm to use.
 	 * Furthermore, with an AI, it creates the AI class and allows
 	 * the AI to learn (synchronously) before starting the play.
 	 * 
@@ -51,7 +77,7 @@ public class TicTacToe {
 	 * The human player will always be O. This is for simplification
 	 * of the code.
 	 * 
-	 * The management of the game is one the main thread. All GUI
+	 * The management of the game is on the main thread. All GUI
 	 * is handled on the Event Dispatch Thread. Dialogs use a semaphore
 	 * to synchronize user input back to the main thread which waits
 	 * for user input.
@@ -100,9 +126,9 @@ public class TicTacToe {
 	}
 	
 	/**
-	 * Plays a game with the given players and stick count
+	 * Plays a game with the given players.
 	 * @param players The players involved in the game with their own GUI
-	 * @return The player that one.
+	 * @return The name of the player that won the game.
 	 */
 	public static String playGame(Player[] players) {
 		boolean gameOver = false;
@@ -118,7 +144,7 @@ public class TicTacToe {
 			count++;
 			
 			// go to the next player
-			playerNum = (playerNum + 1) % 2;
+			playerNum = 1 - playerNum; // (playerNum + 1) % 2;
 			
 			winnerNum = board.findWinner();
 			gameOver = (count == 9 || winnerNum != 0);

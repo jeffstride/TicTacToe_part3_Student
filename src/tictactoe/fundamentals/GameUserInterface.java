@@ -1,5 +1,4 @@
-
-
+package tictactoe.fundamentals;
 public interface GameUserInterface {
 
 	public int getPlayerCount();

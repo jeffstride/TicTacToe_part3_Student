@@ -1,4 +1,7 @@
+package tictactoe.AI;
 import java.util.Arrays;
+
+import tictactoe.fundamentals.Board;
 
 /*
  *  TODO: Student is to implement this class by adding

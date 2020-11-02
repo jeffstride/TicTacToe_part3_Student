@@ -1,15 +1,15 @@
+package tictactoe.console;
 import java.util.Scanner;
+
+import tictactoe.fundamentals.Board;
+import tictactoe.fundamentals.GameUserInterface;
+import tictactoe.fundamentals.Move;
 
 public class ConsoleUI implements GameUserInterface {
 
 	public static Scanner console = new Scanner(System.in);	
 
 	private Board board = new Board();
-	
-	public ConsoleUI(Object semaphore) {
-		// since all console UI is synchronous, we can ignore the semaphore
-		// this.semaphore = semaphore;
-	}
 	
 	@Override
 	public int getPlayerCount() {

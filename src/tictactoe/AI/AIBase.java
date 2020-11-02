@@ -1,3 +1,6 @@
+package tictactoe.AI;
+import tictactoe.fundamentals.GameUserInterface;
+import tictactoe.fundamentals.Player;
 
 public abstract class AIBase extends Player {
 

@@ -1,4 +1,10 @@
+package tictactoe.AI;
 import java.util.*;
+
+import tictactoe.fundamentals.Board;
+import tictactoe.fundamentals.GameUserInterface;
+import tictactoe.fundamentals.Move;
+import tictactoe.fundamentals.Player;
 
 public class GameTreeAI extends AIBase {
 	

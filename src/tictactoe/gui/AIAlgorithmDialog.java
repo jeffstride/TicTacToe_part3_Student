@@ -1,16 +1,18 @@
+package tictactoe.gui;
+
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 
 import javax.swing.*;
 
 /**
- * This class presents a dialog to the user asking how many
- * players are to play the game.
+ * This class presents a dialog to the user asking what type
+ * of AI algorithm to use.
  * 
  * @author Jeff
  *
  */
-public class PlayerCountDialog extends DialogBase {
+public class AIAlgorithmDialog extends DialogBase {
 
 	private int result = 0;
 	
@@ -20,7 +22,7 @@ public class PlayerCountDialog extends DialogBase {
 	 * calls the setup method to create all the internal components.
 	 * @param sem The object used to synchronize threads.
 	 */
-	public PlayerCountDialog(Object sem) {
+	public AIAlgorithmDialog(Object sem) {
 		super(sem);
 		setUp();
 	}
@@ -32,41 +34,32 @@ public class PlayerCountDialog extends DialogBase {
 	 * 
 	 */
 	private void setUp() {
-		
-		
 		// TODO: choose and set layout manager
-		
-		// TODO: create and add components to this pane
-		
-		// TODO: hook up event handlers
-		JLabel label = new JLabel("How many human players? ");
 		this.setLayout(new FlowLayout());
 		
-		//label.setSize(150, 40);
-		//label.setVisible(true);
-		
-		JButton btnOne = new JButton("1 Player vs AI");
-		JButton btnTwo = new JButton("2 Players - NO AI");
-
-		btnOne.addActionListener(this::clickOne);
-		btnTwo.addActionListener(this::clickTwo);
-		
+		// TODO: create and add components to this pane
+		JLabel label = new JLabel("Which AI Algorithm to use? ");
+		JButton btnOne = new JButton("Cups");
+		JButton btnTwo = new JButton("Game Tree");
 		this.add(label);
 		this.add(btnOne);
 		this.add(btnTwo);
+		
+		// TODO: hook up event handlers
+		btnOne.addActionListener(e -> notifyMain(0));
+		btnTwo.addActionListener(e -> notifyMain(1));
 		
 		// default to not showing
 		this.setVisible(false);
 	}
 	
-	private void clickOne(ActionEvent e) {
-		notifyMain(1);
-	}
-	
-	private void clickTwo(ActionEvent e) {
-		notifyMain(2);
-	}
-	
+	/**
+	 * @return
+	 *    0 = GameTree
+	 *    1 = Cups
+	 *    2 = ...
+	 *    3 = ...
+	 */
 	public int getResult() {
 		return result;
 	}

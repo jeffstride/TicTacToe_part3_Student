@@ -1,8 +1,21 @@
+package tictactoe.gui;
 
 import java.awt.FlowLayout;
 
 import javax.swing.*;
 
+import tictactoe.fundamentals.GameUserInterface;
+import tictactoe.fundamentals.Move;
+
+/**
+ * This class is responsible for graphically implementing all the methods
+ * in the GameUserInterface. There will be dialogs for each interactions
+ * with the user. Once the user interaction is completed, the dialog
+ * will notify the main thread via the semaphore.
+ * 
+ * @author jstride
+ *
+ */
 public class SwingUI implements GameUserInterface {
 	
 	//static GraphicsConfiguration gc;
@@ -13,10 +26,27 @@ public class SwingUI implements GameUserInterface {
 	private PlayerCountDialog dialogPlayerCount;
 	private GetUserMoveDialog dialogUserMove;
 	private AIAlgorithmDialog dialogAIAlgorithm;
+	
+	/**
+	 * This is a reference to the last dialog shown. This allows
+	 * us to wait for the result of the last dialog shown and then
+	 * to get the result and display it.
+	 */
 	private DialogBase lastDialog;
 	
+	/**
+	 * This enables us to see if we are running in a multi-threaded
+	 * environment or not. We save of the name of the EDT thread.
+	 */
 	private String nameOfEDT; 
 	
+	/**
+	 * The constructor for the SwingUI object.
+	 * @param semaphore 
+	 *      Enables synchronization with the main thread.
+	 *      This object will be notified once the user has made
+	 *      his/her selection.
+	 */
 	public SwingUI(Object semaphore){
 		
 		// we need this to make our API appear synchronous
@@ -160,6 +190,14 @@ public class SwingUI implements GameUserInterface {
 		    });	
 	}
 
+	/**
+	 * This displays the winner of the last game.
+	 * It asks the user if he/she wants to play again.
+	 * We simplify this by using a modal, popup, but we
+	 * could extend this to be a modeless dialog as well.
+	 * @param winner The name of the player that won the game.
+	 * @return boolean true if the user wants to play again.
+	 */
 	@Override
 	public boolean askPlayAgain(String winner) {
 		int answer = JOptionPane.showConfirmDialog(this.frame, "Do you want to play again?", 
@@ -183,6 +221,13 @@ public class SwingUI implements GameUserInterface {
 		return getDialogResult(dialogAIAlgorithm);
 	}
 
+	/**
+	 * This will wait for the user interaction to be completed by
+	 * whatever dialog is being displayed. Once the thread is notified,
+	 * this thread will display the result.
+	 * The main thread will call this in lieu of actually playing
+	 * the game.
+	 */
 	public void waitForNotifications() {
 		while (true) {
 			synchronized (semaphore ) {

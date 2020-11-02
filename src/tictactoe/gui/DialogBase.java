@@ -1,3 +1,4 @@
+package tictactoe.gui;
 import javax.swing.*;
 
 public abstract class DialogBase extends JPanel {

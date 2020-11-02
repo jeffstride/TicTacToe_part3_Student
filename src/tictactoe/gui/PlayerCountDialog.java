@@ -1,17 +1,17 @@
-
+package tictactoe.gui;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 
 import javax.swing.*;
 
 /**
- * This class presents a dialog to the user asking what type
- * of AI algorithm to use.
+ * This class presents a dialog to the user asking how many
+ * players are to play the game.
  * 
  * @author Jeff
  *
  */
-public class AIAlgorithmDialog extends DialogBase {
+public class PlayerCountDialog extends DialogBase {
 
 	private int result = 0;
 	
@@ -21,7 +21,7 @@ public class AIAlgorithmDialog extends DialogBase {
 	 * calls the setup method to create all the internal components.
 	 * @param sem The object used to synchronize threads.
 	 */
-	public AIAlgorithmDialog(Object sem) {
+	public PlayerCountDialog(Object sem) {
 		super(sem);
 		setUp();
 	}
@@ -33,32 +33,41 @@ public class AIAlgorithmDialog extends DialogBase {
 	 * 
 	 */
 	private void setUp() {
+		
+		
 		// TODO: choose and set layout manager
-		this.setLayout(new FlowLayout());
 		
 		// TODO: create and add components to this pane
-		JLabel label = new JLabel("Which AI Algorithm to use? ");
-		JButton btnOne = new JButton("Cups");
-		JButton btnTwo = new JButton("Game Tree");
+		
+		// TODO: hook up event handlers
+		JLabel label = new JLabel("How many human players? ");
+		this.setLayout(new FlowLayout());
+		
+		//label.setSize(150, 40);
+		//label.setVisible(true);
+		
+		JButton btnOne = new JButton("1 Player vs AI");
+		JButton btnTwo = new JButton("2 Players - NO AI");
+
+		btnOne.addActionListener(this::clickOne);
+		btnTwo.addActionListener(this::clickTwo);
+		
 		this.add(label);
 		this.add(btnOne);
 		this.add(btnTwo);
-		
-		// TODO: hook up event handlers
-		btnOne.addActionListener(e -> notifyMain(0));
-		btnTwo.addActionListener(e -> notifyMain(1));
 		
 		// default to not showing
 		this.setVisible(false);
 	}
 	
-	/**
-	 * @return
-	 *    0 = GameTree
-	 *    1 = Cups
-	 *    2 = ...
-	 *    3 = ...
-	 */
+	private void clickOne(ActionEvent e) {
+		notifyMain(1);
+	}
+	
+	private void clickTwo(ActionEvent e) {
+		notifyMain(2);
+	}
+	
 	public int getResult() {
 		return result;
 	}

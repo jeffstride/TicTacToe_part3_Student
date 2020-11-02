@@ -1,5 +1,8 @@
+package tictactoe.gui;
 import java.awt.*;
 import java.awt.event.*;
+
+import tictactoe.fundamentals.Move;
 
 public class GetUserMoveDialog extends DialogBase {
 
