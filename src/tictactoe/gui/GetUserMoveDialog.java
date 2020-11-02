@@ -8,14 +8,17 @@ public class GetUserMoveDialog extends DialogBase {
 
 	private int result = 0;
 	
-	// 1 = X
-	// 2 = O
-	// 0 would be invalid
+	// 1 == X
+	// 2 == O
+	// 0 is not a valid player turn value
 	private int playerTurn = 1;
 	
 	private int width = 300;
 	private int height = 300;
 	private Font font = new Font("Monospaced", Font.BOLD, 130);
+	
+	// this is a cache of the user's moves
+	// 0 == empty; 1 == X; 2 == O;
 	private int[][] board = new int[3][3];
 	
 	public GetUserMoveDialog(Object sem) {
@@ -33,8 +36,16 @@ public class GetUserMoveDialog extends DialogBase {
 		this.repaint();
 	}
 	
-	public void paintComponent(Graphics g){  
+	/**
+	 * This method gets called when the dialogs should paint itself.
+	 * 
+	 */
+	@Override
+	public void paintComponent(Graphics g){
+		// Be sure to call the super class implementation first
         super.paintComponent(g);
+        
+        // Now, we can paint our TicTacToe board
 		g.setColor(Color.BLACK);
 		this.setBackground(Color.WHITE);
 		g.setFont(font);
@@ -65,18 +76,44 @@ public class GetUserMoveDialog extends DialogBase {
 	    }
 	}
 	
+	/**
+	 * This method gets called when the AI has decided to make its
+	 * move. Since it cannot click on the board, we must call this
+	 * method explicitly to show the AI's move.
+	 * We will always assume that 
+	 * @param move The Move object representing the location and value.
+	 */
 	public void showAIMove(Move move) {
-		// udpate and redraw the board
-		board[move.getRow()][move.getCol()] = playerTurn;
+		// the move's value should match whose turn it is
+		if (move.getValue() != playerTurn) {
+			throw new IllegalArgumentException("Invalid Move!");
+		}
+		
+		// udpate the board with the move made
+		board[move.getRow()][move.getCol()] = move.getValue();
 		// swap from 1 to 2, and 2 to 1
 		playerTurn = playerTurn % 2 + 1;
+		
+		// Redraw the board by triggering a repaint
 		this.repaint();
 	}
 	
+	/**
+	 *  The main thread can access the user's move by requesting
+	 *  the result value.
+	 *  @return The result of the location of the last click.
+	 *     0-8 are valid values.
+	 */
 	public int getResult() {
 		return this.result;
 	}
 	
+	/**
+	 * Create components for this dialog.
+	 * Set up LayoutManager.
+	 * Create and hook up event handlers.
+	 * Set visibility to false until this dialog is to be shown.
+	 */
 	private void setUp() {	
 		createEventHandlers();
 		
@@ -89,14 +126,16 @@ public class GetUserMoveDialog extends DialogBase {
 	 */
 	private void createEventHandlers() {
 		
-		// a mouse listener requires a full interface with lots of methods.
-		// to get around having implement all, we use the MouseAdapter class 
+		// A mouse listener requires a full interface with lots of methods.
+		// The MouseListener interface has five methods.
+		// To get around having implement all, we use the MouseAdapter class 
 		// and override just the one method we're interested in.
-		this.addMouseListener(new MouseAdapter() { 
-	          public void mousePressed(MouseEvent me) { 
-	              onMouseClicked(me); 
-	            } 
-	          }); 
+		this.addMouseListener(new MouseAdapter() {
+			@Override
+	        public void mousePressed(MouseEvent me) { 
+	            onMouseClicked(me); 
+	        } 
+	    }); 
 	}    
 	
 	private void onMouseClicked(MouseEvent me) {
@@ -106,7 +145,7 @@ public class GetUserMoveDialog extends DialogBase {
 		
 		// the move is calculated. 
 		this.result = row*3 + col;
-		
+
 		// validate empty move before notifying main
 		if (board[row][col] == 0) {
 			board[row][col] = playerTurn;
@@ -117,7 +156,7 @@ public class GetUserMoveDialog extends DialogBase {
 			this.notifyMain();
 		}
 		
-		// not a valid move. Could display something.
+		// else if not a valid move, we could display or do something.
 		
 	}
 }

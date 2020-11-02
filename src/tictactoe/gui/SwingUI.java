@@ -181,13 +181,13 @@ public class SwingUI implements GameUserInterface {
 
 	@Override
 	public void showAIMove(Move move) {
-		// invokeLater
-		SwingUtilities.invokeLater(new Runnable() {
-		      public void run() {
-		    	  dialogUserMove.setVisible(true);
-		    	  dialogUserMove.showAIMove(move);
-		      }
-		    });	
+		// invokeLater to assure that the dialog
+		// is run on the EDT thread.
+		// This lambda represents the Runnable interface, run() method.
+		SwingUtilities.invokeLater( () -> {
+		   dialogUserMove.setVisible(true);
+		   dialogUserMove.showAIMove(move);
+		});	
 	}
 
 	/**
@@ -226,7 +226,8 @@ public class SwingUI implements GameUserInterface {
 	 * whatever dialog is being displayed. Once the thread is notified,
 	 * this thread will display the result.
 	 * The main thread will call this in lieu of actually playing
-	 * the game.
+	 * the game. Don't call this method if you want the main thread
+	 * to do anything.
 	 */
 	public void waitForNotifications() {
 		while (true) {

@@ -26,40 +26,86 @@ public class TicTacToe {
 	private GameUserInterface gui;
 	public static boolean useGameTree = true;
 	
+	private static final int GAME_MODE_GUI = 0;
+	private static final int GAME_MODE_DIALOGS = 1;
+	private static final int GAME_MODE_CONSOLE = 2;
+	
 	/**
 	 * Main will ask via the console if we are GUI or console.
 	 * It will then create an instance of the correct user interface
 	 * class, an instance of this TicTacToe class, and connect
-	 * the two together. 
+	 * the two together. It then starts playing.
 	 * @param args
 	 */
 	public static void main(String[] args) {
 		TicTacToe game = new TicTacToe();
-		Scanner console = new Scanner(System.in);
+
+		int mode = game.getMode();
 		
-		System.out.print("GUI or console? (G/C): ");
-		boolean useGUI = console.nextLine().toLowerCase().startsWith("g");
-		
-		if (useGUI) {
+		if (mode != GAME_MODE_CONSOLE) {
 			// let's use our GameManager object as the semaphore
 			SwingUI gui = new SwingUI(game);
 			game.setGameInterface(gui);
 			
-			// start up the UI on the EVT
+			// start up the UI on the EDT
 			SwingUI.startUIOnEventDispatchThread(gui);
 			
-			// TODO: Delete this once game play works
-			gui.waitForNotifications();
+			// If we want to just test our dialogs, then
+			// let's have the main thread just wait for notifications
+			// until the user quits the app.
+			if (mode == GAME_MODE_DIALOGS) {
+				gui.waitForNotifications();
+			}
 		} else {
-			
+			// Play the games using the console window as the UI
 			game.setGameInterface(new ConsoleUI());
 		}
 		
-		// TODO: Once the Student is ready to start playing
-		// the game, call: game.play();
-		// game.play();
+		// if we aren't in our test dialogs mode, play the game(s)!!
+		if (mode != GAME_MODE_DIALOGS) {
+			game.play();
+			
+			System.out.println("End of Session. Thanks for playing.");
+			// kill all threads and end the program
+			System.exit(0);
+		}
+	}
+	
+	/**
+	 * Asks the user for the mode to run the program in.
+	 * @return GAME_MODE_value
+	 *    0 == GUI
+	 *    1 == Test Dialogs
+	 *    2 == Console
+	 */
+	private int getMode() {
+		Scanner console = ConsoleUI.console;
+		
+		// Get the mode to run the code.
+		// Loop until we get a good mode
+		char mode = '\0';
+		while (mode == '\0') {
+			System.out.print("GUI, Console or Dialog mode? (G/C/D): ");
+			String input =console.nextLine().toLowerCase();
+			if (input.length() > 0) {
+				mode = input.charAt(0);
+			}
+		}
+		
+		int result;
+		switch (mode) {
+			case 'g':
+				result = GAME_MODE_GUI;
+				break;
+			case 'd':
+				result = GAME_MODE_DIALOGS;
+				break;
+			default:
+				result = GAME_MODE_CONSOLE;
+				break;
+		}
 
-		console.close();
+		return result;
 	}
 	
 	private void setGameInterface(GameUserInterface gui) {
@@ -120,9 +166,6 @@ public class TicTacToe {
 			String winner = playGame(players);
 			keepPlaying = gui.askPlayAgain(winner);
 		}
-		
-		System.out.println("End of Session. Thanks for playing.");
-		System.exit(0);
 	}
 	
 	/**
