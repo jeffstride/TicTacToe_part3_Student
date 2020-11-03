@@ -49,15 +49,16 @@ message pump to allow for user interactions.
 6. main thread: asks the dialog for the value provided by the user and
 then continues to run the game
 <p>
+Here are the steps in Table format (Displays well only on GitHub.com)
 
 Main Thread | EDT Thread
 ------------|-----------
-calls a method | <pumps messages>
+calls a method | _pumps messages_
 triggers a method call on EDT | SwingUI will show the dialog
 waits for the EDT | pumps messages until user interaction
-<wait> | User provides answer
-ask dialog for value | <pumps messages>
-continue to run game | <pumps messages>
+_wait_ | User provides answer
+ask dialog for value | _pumps messages_
+continue to run game | _pumps messages_
 <p>
 
 
