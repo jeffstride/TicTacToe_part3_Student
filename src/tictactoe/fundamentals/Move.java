@@ -1,9 +1,19 @@
 package tictactoe.fundamentals;
 
+/**
+ * This is an abstraction for a TicTacToe move.
+ * It represents it with rows and column numbers.
+ * @author Jeff
+ *
+ */
 public class Move {
 
 	private int row;
 	private int col;
+	// Value is:
+	//   0 == empty
+	//   1 == X
+	//   2 == O
 	private int value;
 	
 	public Move(int row, int col) {

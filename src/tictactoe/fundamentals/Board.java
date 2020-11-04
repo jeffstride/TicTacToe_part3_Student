@@ -2,6 +2,15 @@ package tictactoe.fundamentals;
 
 import java.util.*;
 
+/**
+ * This class keeps track of the board by completing moves.
+ * It can undo moves, determine if a move is valid, give a list
+ * of moves yet to be made, give a list of moves already made,
+ * and determine if there is a winner.
+ * 
+ * @author Jeff
+ *
+ */
 public class Board {
 
 	// 0 = empty

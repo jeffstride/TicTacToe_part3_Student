@@ -6,7 +6,20 @@ This project provides a full infrastructure for Students to implement a TicTacTo
 <p>
 There is the opportunity to expand this project to include an AI based on MiniMax Algorithm,
 but that is not currently provided.
+
+
+There are several major milestones for the students to complete. These milestones don't have to 
+necessarily be done in this order.
+1. Create Swing UI dialogs that are triggered from the menu system.
+2. Verify that a two player game works using GUI.
+3. Implement an AI using Cups as the learning algorithm.
+4. Implement an AI using a Game Tree.
 <p>
+The student can extend the GUI by replacing the JOptionPane popups with dialogs that
+inherit from DialogBase. The student can also choose to add other UI elements such
+as a ProgressDialog when the AI is learning, and more.
+
+## Design Overview
 The application is run in 1 of 3 modes:
 1. Console UI mode. This allows the student/class to avoid GUI altogether.
 2. Dialogs mode. This allows the student to test out dialogs in a way that avoids
@@ -21,23 +34,41 @@ input back to the main thread. This is done with Java' keyword [synchronized](ht
 synchronization methods on object [wait() and notify()](https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/lang/Object.html).
 All the synchronization is handled for the student as long as they inherit from DialogBase
 and follow the pattern of showing the dialog and then calling DialogBase::notifyMain().
-<p> 
 
-There are several major milestones for the students to complete. These milestones don't have to 
-necessarily be done in this order. However, it is highly recommended that a two-player version of
-the game be working before starting on any AI.
-1. Create Swing UI dialogs that are triggered from the menu system.
-2. Verify that a two player game works using GUI.
-3. Implement an AI using Cups as the learning algorithm.
-4. Implement an AI using a Game Tree.
-<p>
-The student can extend the GUI by replacing the JOptionPane popups with dialogs that
-inherit from DialogBase. The student can also choose to add other UI elements such
-as a ProgressDialog when the AI is learning, and more.
+### Packages
+There are 4 different packages in this infrastructure.
+1. tictactoe.AI - All code related to creating an AI belongs in this package.
+2. tictactoe.console - This is the implemenation for the console UI.
+3. tictactoe.fundamentals - All TicTacToe smarts live here. 
+4. tictactoe.gui - All code related to creating SwingUI dialogs belong in here.
 
-## Design Overview
 ### UML Diagram of base classes
 ![Image](UML%20TicTacToe.png)
+### Code to Update
+Organized by package:
+1. *AI Package* - The student should implement everything in this package.
+2. *Console Package* - Nothing to do here. No need to make any changes.
+3. *Fundamentals Package* - Students should not need to change any of the code in the fundamentals package.
+However, if the student wants to upgrade functionality, additions/changes can be made.
+It is currently fully operational.
+4. *GUI Package* - Students should not need to update:
+	* SwingUI.java - No need to update.
+	* DialogBase.java - No need to update
+	* The rest of the files should be updated
+
+### Updating GUI
+Each dialog class has a constructor that is sufficient. If the student adds more fields,
+they can be initialize in the constructor. But, the code can be left as:
+```
+    public AIAlgorithmDialog(Object sem) {
+		super(sem);
+		setUp();
+	}
+```
+The student should then implement setUp() by creating all the components, choosing the
+LayoutManager, setting up event handlers, and then assuring that the dialog is NOT visible.
+
+
 ### Synchronization of Threads
 Here are the steps.
 1. main thread: calls a method (e.g. SwingUI.getPlayerCount())
@@ -57,6 +88,7 @@ calls a method | _pumps messages_
 triggers a method call on EDT | SwingUI will show the dialog
 waits for the EDT | pumps messages until user interaction
 _wait_ | User provides answer
+_wait_ | notify main thread
 ask dialog for value | _pumps messages_
 continue to run game | _pumps messages_
 <p>

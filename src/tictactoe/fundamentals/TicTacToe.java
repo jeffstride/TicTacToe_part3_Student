@@ -198,11 +198,12 @@ public class TicTacToe {
 		if (winnerNum == 0) {
 			winner = "STALEMATE: Nobody";
 		} else {
-			// give winning message
+			// prepares the name of the winning player
+			// which is returned by this method.
 			winner = players[winnerNum-1].toString();
 		}
 		
-		// inform players of who won
+		// inform each player who won
 		players[0].tellPlayerResult(winnerNum);
 		players[1].tellPlayerResult(winnerNum);
 		
