@@ -19,7 +19,58 @@ The student can extend the GUI by replacing the JOptionPane popups with dialogs 
 inherit from DialogBase. The student can also choose to add other UI elements such
 as a ProgressDialog when the AI is learning, and more.
 
-## Design Overview
+
+# Code to Update
+Organized by package:
+1. **AI Package** - The student should implement everything in this package.
+2. **Console Package** - Nothing to do here. No need to make any changes.
+3. **Fundamentals Package** - Students should not need to change any of the code in the fundamentals package.
+However, if the student wants to upgrade functionality, additions/changes can be made.
+It is currently fully operational.
+4. **GUI Package** - Students should not need to update:
+	* SwingUI.java - No need to update.
+	* DialogBase.java - No need to update
+	* The rest of the files should be updated
+
+## Dialogs to Create
+There are several dialogs to create. These are NOT popup/modal dialogs. Instead,
+These dialogs are added to the JFrame directly.
+
+1. Pick how many players to have. One player implies an AI player is available.
+2. Get the user's move. This must also display the game board.
+3. Pick the AI algorithm: GameTree or Cups.
+
+The classes to update for the dialogs are:
+1. PlayerCountDialog.java
+2. GetUserMoveDialog.java
+3. AIAlgorithmDialog.java
+
+## Implementing GUI Dialogs
+Each dialog class has a constructor that is sufficient. If the student adds more fields,
+they can be initialize in the constructor. But, the code can be left as:
+```
+    public AIAlgorithmDialog(Object sem) {
+		super(sem);
+		setUp();
+	}
+```
+The student should then implement setUp() by creating all the components, choosing the
+LayoutManager, setting up event handlers, and then assuring that the dialog is NOT visible.
+<p>
+It is **important** to call _notifyMain()_ in the event handler. This lets the main thread know
+that it can stop waiting. The first thing it will do is ask the dialog for the result by
+calling getResult. So, don't forget to call it!<p>
+Each dialog needs to provide the result of the user interaction by implementing the
+method, getResult().
+```
+    public int getResult() {
+    	// result was set in the event handler
+		return result;
+	}
+```
+The value returned needs to reflect what the user did.
+
+# Design Overview
 The application is run in 1 of 3 modes:
 1. Console UI mode. This allows the student/class to avoid GUI altogether.
 2. Dialogs mode. This allows the student to test out dialogs in a way that avoids
@@ -35,41 +86,19 @@ synchronization methods on object [wait() and notify()](https://docs.oracle.com/
 All the synchronization is handled for the student as long as they inherit from DialogBase
 and follow the pattern of showing the dialog and then calling DialogBase::notifyMain().
 
-### Packages
+## Packages
 There are 4 different packages in this infrastructure.
 1. tictactoe.AI - All code related to creating an AI belongs in this package.
 2. tictactoe.console - This is the implemenation for the console UI.
 3. tictactoe.fundamentals - All TicTacToe smarts live here. 
 4. tictactoe.gui - All code related to creating SwingUI dialogs belong in here.
 
-### UML Diagram of base classes
+## UML Diagram of base classes
+This is a bit outdated and mislabeled, but it is close.
+
 ![Image](UML%20TicTacToe.png)
-### Code to Update
-Organized by package:
-1. *AI Package* - The student should implement everything in this package.
-2. *Console Package* - Nothing to do here. No need to make any changes.
-3. *Fundamentals Package* - Students should not need to change any of the code in the fundamentals package.
-However, if the student wants to upgrade functionality, additions/changes can be made.
-It is currently fully operational.
-4. *GUI Package* - Students should not need to update:
-	* SwingUI.java - No need to update.
-	* DialogBase.java - No need to update
-	* The rest of the files should be updated
 
-### Updating GUI
-Each dialog class has a constructor that is sufficient. If the student adds more fields,
-they can be initialize in the constructor. But, the code can be left as:
-```
-    public AIAlgorithmDialog(Object sem) {
-		super(sem);
-		setUp();
-	}
-```
-The student should then implement setUp() by creating all the components, choosing the
-LayoutManager, setting up event handlers, and then assuring that the dialog is NOT visible.
-
-
-### Synchronization of Threads
+## Synchronization of Threads
 Here are the steps.
 1. main thread: calls a method (e.g. SwingUI.getPlayerCount())
 2. main thread: triggers a method call on EDT
@@ -85,8 +114,9 @@ Here are the steps in Table format (Displays well only on GitHub.com)
 Main Thread | EDT Thread
 ------------|-----------
 calls a method | _pumps messages_
-triggers a method call on EDT | SwingUI will show the dialog
-waits for the EDT | pumps messages until user interaction
+triggers a method call on EDT | _pumps messages_
+_wait_ | SwingUI will show the dialog
+_wait_ | pumps messages until user interaction
 _wait_ | User provides answer
 _wait_ | notify main thread
 ask dialog for value | _pumps messages_
@@ -94,11 +124,4 @@ continue to run game | _pumps messages_
 <p>
 
 
-## Dialogs to Create
-There are several dialogs to create. These are NOT popup/modal dialogs. Instead,
-These dialogs are added to the JFrame directly.
-
-1. Pick how many players to have. 1 Player implies an AI version is available.
-2. Get the user's move. This must display the game board and receive a click event
-3. Pick the AI algorithm: GameTree or Cups.
 
