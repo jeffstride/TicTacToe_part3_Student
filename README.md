@@ -27,6 +27,7 @@ Organized by package:
 3. **Fundamentals Package** - Students should not need to change any of the code in the fundamentals package.
 However, if the student wants to upgrade functionality, additions/changes can be made.
 It is currently fully operational.
+    * A good update would be to update Board.toString() to print out a nicer board.
 4. **GUI Package** - Students should not need to update:
 	* SwingUI.java - No need to update.
 	* DialogBase.java - No need to update
