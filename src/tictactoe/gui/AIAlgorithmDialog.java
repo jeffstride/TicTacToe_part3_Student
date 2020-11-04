@@ -35,19 +35,10 @@ public class AIAlgorithmDialog extends DialogBase {
 	 */
 	private void setUp() {
 		// TODO: choose and set layout manager
-		this.setLayout(new FlowLayout());
 		
 		// TODO: create and add components to this pane
-		JLabel label = new JLabel("Which AI Algorithm to use? ");
-		JButton btnOne = new JButton("Cups");
-		JButton btnTwo = new JButton("Game Tree");
-		this.add(label);
-		this.add(btnOne);
-		this.add(btnTwo);
 		
 		// TODO: hook up event handlers
-		btnOne.addActionListener(e -> notifyMain(0));
-		btnTwo.addActionListener(e -> notifyMain(1));
 		
 		// default to not showing
 		this.setVisible(false);
@@ -62,13 +53,6 @@ public class AIAlgorithmDialog extends DialogBase {
 	 */
 	public int getResult() {
 		return result;
-	}
-	
-	private void notifyMain(int result) {
-		this.result = result;
-		notifyMain();
-		// hide ourselves when we are done
-		this.setVisible(false);
 	}
 	
 }

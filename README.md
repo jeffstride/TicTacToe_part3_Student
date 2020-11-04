@@ -64,7 +64,7 @@ Each dialog needs to provide the result of the user interaction by implementing 
 method, getResult().
 ```
     public int getResult() {
-    	// result was set in the event handler
+    	// result needs to be set in the event handler
 		return result;
 	}
 ```
