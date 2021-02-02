@@ -61,26 +61,46 @@ public class SwingUI implements GameUserInterface {
 	 * interactions happen on the correct thread. Yes, it is possible that
 	 * we could get everything to work correctly without this. BUT! But,
 	 * it is highly recommended to use this method when creating UI.
+	 * 
+	 * Before we return, we wait for the dialog to be fully displayed
+	 * and ready to go.
+	 * 
+	 * @param swingUI The object that manages all the Swing dialogs.
 	 */
-	public static void startUIOnEventDispatchThread(SwingUI ex) {
-		// Question: What bad things would happen if we don't do this?
+	public static void startUIOnEventDispatchThread(SwingUI swingUI) {
+		// We need to give invokeLater a task.
+		// We do this by giving it an interface, Runnable.
+		// Runnable has 1 method in it: public static void run().
+		// There are many ways to give an interface
+		//  1) inline anonymous class (complicated syntax)
+		//  2) a reference to an object that implements the interface
+		//  3) a lambda expression
+		//  4) a method reference/pointer
+		
+		// Let's use an anonymous class
 	    SwingUtilities.invokeLater(new Runnable() {
-	      public void run() {
-	  			ex.createFrame();
-	      }
+		    public void run() {
+		    	swingUI.createFrame();
+		    }
 	    });
 	    
-		// while the EventDispatchThread gets user input, wait()
+		// Let's wait for the EventDispatchThread to get created
+	    // and to create the JFrame with all the components. Once
+	    // that is done, we will continue.
 		// this code runs on the Main thread
-		synchronized (ex.semaphore ) {
+		synchronized (swingUI.semaphore ) {
 			try {
-				ex.semaphore.wait();
+				swingUI.semaphore.wait();
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
 		}	
-	  }
+	}
 	
+	/*
+	 * Creates a JFrame window with all the components, menus
+	 * and event handlers.
+	 */
 	public void createFrame() {
 		// get the name of this EDT thread
 		nameOfEDT = Thread.currentThread().getName();
@@ -130,6 +150,22 @@ public class SwingUI implements GameUserInterface {
 		}
 	}
 
+	/*
+	 * Displays a dialog in the body of the main frame.
+	 * If this method is executed on the main thread, then this
+	 * will wait for the dialog to have a result (wait for the
+	 * dialog to notify the main thread). Once notified, it
+	 * will get the integer value from the dialog.
+	 * 
+	 * When the user selects a dialog from the menus, then
+	 * this will get executed on the EventDispatchThread.
+	 * 
+	 * When the user plays a game normally, then this will
+	 * will get executed on the main thread.
+	 * 
+	 * @param dlg The dialog to show and get the value from
+	 * @return The integer result from the dialog shown.
+	 */
 	private int getDialogResult(DialogBase dlg) {
 		// remember the last dialog we wanted a result for
 		lastDialog = dlg;
@@ -137,10 +173,9 @@ public class SwingUI implements GameUserInterface {
 		// invokeLater
 		SwingUtilities.invokeLater(new Runnable() {
 		      public void run() {
-		    	  if (dlg != dialogUserMove) {
-		    		  dialogUserMove.setVisible(false);
-		    	  }
-		    	  dlg.setVisible(true);
+		  		dialogUserMove.setVisible(dlg == dialogUserMove);
+				dialogPlayerCount.setVisible(dlg == dialogPlayerCount);
+				dialogAIAlgorithm.setVisible(dlg == dialogAIAlgorithm);	
 		      }
 		    });
 		
